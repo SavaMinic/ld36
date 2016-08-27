@@ -4,16 +4,15 @@ using System.Collections;
 public class Connection : MonoBehaviour
 {
 
-	public Star from {get; private set; }
+	public Star from { get; private set; }
 
-	public Star to {get; private set;}
+	public Star to { get; private set;}
 
 	private float width;
 
 	public void Initialize(Star fromStar, float width = 0.3f)
 	{
 		from = fromStar;
-		transform.parent = GameObject.Find("Connections").transform;
 		this.width = width;
 	}
 

@@ -6,7 +6,6 @@ using Random = UnityEngine.Random;
 public class StarManager : MonoBehaviour
 {
 
-
 	public enum GameState
 	{
 		Default = 0,
@@ -37,12 +36,8 @@ public class StarManager : MonoBehaviour
 
 	private List<Star> selectedStars = new List<Star>();
 	private Star lastHoveredStar;
-	private List<Connection> connections = new List<Connection>();
 
 	private GameObject starPrefab;
-	private GameObject connectionPrefab;
-
-	private Connection currentConnection;
 
 	#endregion
 
@@ -50,7 +45,6 @@ public class StarManager : MonoBehaviour
 	{
 		Instance = this;
 		starPrefab = Resources.Load("Prefabs/Star") as GameObject;
-		connectionPrefab = Resources.Load("Prefabs/Connection") as GameObject;
 	}
 
 	void Start()
@@ -59,12 +53,6 @@ public class StarManager : MonoBehaviour
 		GenerateStars(10);
 	}
 
-	private void CreateCurrentConnection(Star from)
-	{
-		currentConnection = Instantiate<GameObject>(connectionPrefab).GetComponent<Connection>();
-		currentConnection.Initialize(from);
-		UpdateCurrentConnectionPosition();
-	}
 
 	void Update()
 	{
@@ -77,7 +65,7 @@ public class StarManager : MonoBehaviour
 				lastHoveredStar = star;
 				star.Select();
 				selectedStars.Add(star);
-				CreateCurrentConnection(star);
+				ConnectionManager.Instance.CreateCurrentConnection(star);
 			});
 		}
 		// Released the button while dragging
@@ -89,11 +77,6 @@ public class StarManager : MonoBehaviour
 				selectedStars[i].Deselect();
 			}
 			selectedStars.Clear();
-			if (currentConnection != null)
-			{
-				GameObject.Destroy(currentConnection.gameObject);
-				currentConnection = null;
-			}
 		}
 		// Still dragging
 		else if (Input.GetMouseButton(0) && State == GameState.Dragging)
@@ -108,9 +91,7 @@ public class StarManager : MonoBehaviour
 					{
 						if (selectedStars.Count > 0)
 						{
-							currentConnection.Connect(star);
-							connections.Add(currentConnection);
-							CreateCurrentConnection(star);
+							ConnectionManager.Instance.ConnectCurrentConnection(star);
 						}
 						star.Select();
 						selectedStars.Add(star);
@@ -120,17 +101,12 @@ public class StarManager : MonoBehaviour
 					{
 						star.Deselect();
 						selectedStars.Remove(star);
-						if (connections.Count > 0)
-						{
-							var connection = connections[connections.Count - 1];
-							connections.Remove(connection);
-							GameObject.Destroy(connection.gameObject);
-						}
+						ConnectionManager.Instance.DeleteLastConnection();
 					}
 				}
 			}, () => {
 				lastHoveredStar = null;
-				UpdateCurrentConnectionPosition();
+				ConnectionManager.Instance.UpdateCurrentConnectionPosition();
 			});
 		}
 	}
@@ -176,25 +152,6 @@ public class StarManager : MonoBehaviour
 			star.transform.position = newPosition;
 
 			allStars.Add(star.GetComponent<Star>());
-		}
-	}
-
-	private void DeleteAllConnections()
-	{
-		for (int i = 0; i < connections.Count; i++)
-		{
-			GameObject.Destroy(connections[i].gameObject);
-		}
-		connections.Clear();
-	}
-
-	private void UpdateCurrentConnectionPosition()
-	{
-		if (currentConnection)
-		{
-			var mousePosition = Input.mousePosition;
-			mousePosition.z = 10f;
-			currentConnection.LookAt(Camera.main.ScreenToWorldPoint(mousePosition));
 		}
 	}
 
