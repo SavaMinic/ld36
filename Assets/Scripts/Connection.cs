@@ -8,20 +8,30 @@ public class Connection : MonoBehaviour
 
 	public Star to {get; private set;}
 
-	public void Initialize(Star fromStar, Star toStar, float width = 0.3f)
+	private float width;
+
+	public void Initialize(Star fromStar, float width = 0.3f)
 	{
 		from = fromStar;
-		to = toStar;
+		transform.parent = GameObject.Find("Connections").transform;
+		this.width = width;
+	}
 
-		Vector3 start = fromStar.transform.position;
-		var dir = toStar.transform.position - start;
+	public void LookAt(Vector3 to)
+	{
+		Vector3 start = from.transform.position;
+		var dir = to - start;
 		var position = start + (dir / 2f);
 
 		transform.position = position;
 		transform.rotation = Quaternion.FromToRotation(Vector3.up, dir);
 		transform.localScale = new Vector3(width, dir.magnitude / 2f, width);
+	}
 
-		transform.parent = GameObject.Find("Connections").transform;
+	public void Connect(Star toStar)
+	{
+		to = toStar;
+		LookAt(to.transform.position);
 	}
 
 }
