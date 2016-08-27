@@ -6,15 +6,16 @@ using Random = UnityEngine.Random;
 public class StarManager : MonoBehaviour
 {
 
-	#region Properties
-
-	public static StarManager Instance { get; private set; }
 
 	public enum GameState
 	{
 		Default = 0,
 		Dragging,
 	}
+
+	#region Properties
+
+	public static StarManager Instance { get; private set; }
 
 	public GameState State { get; private set; }
 
@@ -35,9 +36,11 @@ public class StarManager : MonoBehaviour
 	private List<Star> allStars = new List<Star>();
 
 	private List<Star> selectedStars = new List<Star>();
-	private Star lastSelectedStar;
+	private Star lastHoveredStar;
+	private List<Connection> connections = new List<Connection>();
 
 	private GameObject starPrefab;
+	private GameObject connectionPrefab;
 
 	#endregion
 
@@ -45,6 +48,7 @@ public class StarManager : MonoBehaviour
 	{
 		Instance = this;
 		starPrefab = Resources.Load("Prefabs/Star") as GameObject;
+		connectionPrefab = Resources.Load("Prefabs/Connection") as GameObject;
 	}
 
 	void Start()
@@ -59,16 +63,14 @@ public class StarManager : MonoBehaviour
 		{
 			OnStarHit(star =>
 			{
-				Debug.Log("HIT STAR " + star.gameObject.transform.position);
 				State = GameState.Dragging;
-				lastSelectedStar = star;
+				lastHoveredStar = star;
 				star.Select();
 				selectedStars.Add(star);
 			});
 		}
 		else if (Input.GetMouseButtonUp(0) && State == GameState.Dragging)
 		{
-			Debug.Log("Released!");
 			State = GameState.Default;
 			for (int i = 0; i < selectedStars.Count; i++)
 			{
@@ -80,23 +82,35 @@ public class StarManager : MonoBehaviour
 		{
 			OnStarHit(star =>
 			{
-				if (star != lastSelectedStar || lastSelectedStar == null)
+				if (star != lastHoveredStar)
 				{
-					Debug.Log("Toggle STAR " + star.gameObject.transform.position);
-					lastSelectedStar = star;
-					if (!star.IsSelected)
+					lastHoveredStar = star;
+					// if star is not selected, select it
+					if (!star.IsSelected && !selectedStars.Contains(star))
 					{
+						if (selectedStars.Count > 0)
+						{
+							var connection = Instantiate<GameObject>(connectionPrefab).GetComponent<Connection>();
+							connection.Initialize(selectedStars[selectedStars.Count - 1], star);
+							connections.Add(connection);
+						}
 						star.Select();
 						selectedStars.Add(star);
 					}
-					else
+					else if (star.IsSelected && selectedStars[selectedStars.Count - 1] == star)
 					{
 						star.Deselect();
 						selectedStars.Remove(star);
+						if (connections.Count > 0)
+						{
+							var connection = connections[connections.Count - 1];
+							connections.Remove(connection);
+							GameObject.Destroy(connection.gameObject);
+						}
 					}
 				}
 			}, () => {
-				lastSelectedStar = null;
+				lastHoveredStar = null;
 			});
 		}
 	}
@@ -113,7 +127,8 @@ public class StarManager : MonoBehaviour
 				callback(star);
 			}
 		}
-		else nothingCallback();
+		else if (nothingCallback != null)
+			nothingCallback();
 	}
 
 	public void GenerateStars(int count = 5)
@@ -142,6 +157,15 @@ public class StarManager : MonoBehaviour
 
 			allStars.Add(star.GetComponent<Star>());
 		}
+	}
+
+	private void DeleteAllConnections()
+	{
+		for (int i = 0; i < connections.Count; i++)
+		{
+			GameObject.Destroy(connections[i].gameObject);
+		}
+		connections.Clear();
 	}
 
 }
