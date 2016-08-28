@@ -18,8 +18,10 @@ public class StarManager : MonoBehaviour
 
 	public GameState State { get; private set; }
 
-	public List<Star> AllStars { get; private set; }
+	public List<List<Star>> AllStars { get; private set; }
 	public List<Star> SelectedStars { get; private set; }
+
+	public int WinningIndex { get; private set; }
 
 	#endregion
 
@@ -45,7 +47,9 @@ public class StarManager : MonoBehaviour
 	{
 		Instance = this;
 		starPrefab = Resources.Load<GameObject>("Prefabs/Star");
-		AllStars = new List<Star>();
+		AllStars = new List<List<Star>>();
+		for (int i = 0; i < 3; i++)
+			AllStars.Add(new List<Star>());
 		SelectedStars = new List<Star>();
 	}
 
@@ -125,28 +129,31 @@ public class StarManager : MonoBehaviour
 	public void NewGame(int starCount = 10)
 	{
 		State = GameState.Default;
-		GenerateStars(starCount);
+		WinningIndex = Random.Range(0, 2);
+		GenerateStars(0, starCount);
 		SolutionManager.Instance.GenerateNewSolution(0);
+		GenerateStars(1, starCount);
 		SolutionManager.Instance.GenerateNewSolution(1);
+		GenerateStars(2, starCount);
 		SolutionManager.Instance.GenerateNewSolution(2);
 	}
 
 	public void ResetSky()
 	{
-		for (int i = 0; i < AllStars.Count; i++)
+		for (int i = 0; i < AllStars[WinningIndex].Count; i++)
 		{
-			AllStars[i].Deactivate();
+			AllStars[WinningIndex][i].Deactivate();
 		}
 	}
 
-	public void GenerateStars(int count = 5)
+	public void GenerateStars(int index, int count = 5)
 	{
-		for (int i = 0; i < AllStars.Count; i++)
+		for (int i = 0; i < AllStars[index].Count; i++)
 		{
-			GameObject.Destroy(AllStars[i].gameObject);
+			GameObject.Destroy(AllStars[index][i].gameObject);
 		}
+		AllStars[index].Clear();
 
-		AllStars.Clear();
 		for (int i = 0; i < count; i++)
 		{
 			// instantiate star
@@ -159,11 +166,13 @@ public class StarManager : MonoBehaviour
 			do
 			{
 				newPosition = new Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
-				okPosition = !AllStars.Exists(s => Vector2.Distance(s.transform.position, newPosition) < minStarDistance);
+				okPosition = !AllStars[index].Exists(s => Vector2.Distance(s.transform.position, newPosition) < minStarDistance);
 			} while (!okPosition);
 			star.transform.position = newPosition;
+			star.gameObject.SetActive(index == WinningIndex);
 
-			AllStars.Add(star.GetComponent<Star>());
+			AllStars[index].Add(star.GetComponent<Star>());
+
 		}
 	}
 

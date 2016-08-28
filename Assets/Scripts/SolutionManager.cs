@@ -39,16 +39,16 @@ public class SolutionManager : MonoBehaviour
 	public void GenerateNewSolution(int index = 0)
 	{
 		int straightLimit = Random.Range(2,3);
-		int branchOut = Random.Range(0, 3);
+		int branchOut = Random.Range(0, 3) + 4 - straightLimit;
 		Debug.Log("Generating solution! " + straightLimit + " branch " + branchOut);
 		Solutions[index].Clear();
 
 		// try to make big line (up to limit)
-		var freeStars = new List<Star>(StarManager.Instance.AllStars);
+		var freeStars = new List<Star>(StarManager.Instance.AllStars[index]);
 		Star from = null;
 		for (int i = 0; i < straightLimit; i++)
 		{
-			Star star = GetAvailableStar(Solutions[index], from);
+			Star star = GetAvailableStar(index, Solutions[index], from);
 			if (star != null)
 			{
 				// TODO: check this interesctions check, seems that not working always
@@ -73,6 +73,8 @@ public class SolutionManager : MonoBehaviour
 
 	private void BranchOut(List<SolutionConnection> solution, List<Star> freeStars)
 	{
+		if (solution.Count == 0)
+			return;
 		var branchOutStar = solution.GetRandom().From;
 		var freeStar = freeStars.GetRandom();
 		solution.Add(new SolutionConnection(branchOutStar, freeStar));
@@ -97,13 +99,12 @@ public class SolutionManager : MonoBehaviour
 		return false;
 	}
 
-	private Star GetAvailableStar(List<SolutionConnection> solution, Star previousStar)
+	private Star GetAvailableStar(int index, List<SolutionConnection> solution, Star previousStar)
 	{
 		// limit it to some value
-		int limit = StarManager.Instance.AllStars.Count;
-		for(int i = 0; i < limit; i++)
+		for(int i = 0; i < 10; i++)
 		{
-			var star = StarManager.Instance.AllStars.GetRandom();
+			var star = StarManager.Instance.AllStars[index].GetRandom();
 			// there is no connection already like this
 			if (!solution.Exists(s => (s.To == star && s.From == previousStar) || (s.To == previousStar && s.From == star)))
 			{
