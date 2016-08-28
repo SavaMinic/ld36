@@ -18,6 +18,9 @@ public class StarManager : MonoBehaviour
 
 	public GameState State { get; private set; }
 
+	public List<Star> AllStars { get; private set; }
+	public List<Star> SelectedStars { get; private set; }
+
 	#endregion
 
 	#region Public fields
@@ -32,9 +35,6 @@ public class StarManager : MonoBehaviour
 
 	#region Private fields
 
-	private List<Star> allStars = new List<Star>();
-
-	private List<Star> selectedStars = new List<Star>();
 	private Star lastHoveredStar;
 
 	private GameObject starPrefab;
@@ -45,14 +45,14 @@ public class StarManager : MonoBehaviour
 	{
 		Instance = this;
 		starPrefab = Resources.Load("Prefabs/Star") as GameObject;
+		AllStars = new List<Star>();
+		SelectedStars = new List<Star>();
 	}
 
 	void Start()
 	{
-		State = GameState.Default;
-		GenerateStars(10);
+		NewGame();
 	}
-
 
 	void Update()
 	{
@@ -64,7 +64,7 @@ public class StarManager : MonoBehaviour
 				State = GameState.Dragging;
 				lastHoveredStar = star;
 				star.Activate();
-				selectedStars.Add(star);
+				SelectedStars.Add(star);
 				ConnectionManager.Instance.CreateCurrentConnection(star);
 			});
 		}
@@ -72,7 +72,7 @@ public class StarManager : MonoBehaviour
 		else if (Input.GetMouseButtonUp(0) && State == GameState.Dragging)
 		{
 			State = GameState.Default;
-			selectedStars.Clear();
+			SelectedStars.Clear();
 			ConnectionManager.Instance.DeleteCurrentConnection();
 		}
 		// Still dragging
@@ -83,7 +83,7 @@ public class StarManager : MonoBehaviour
 				if (star != lastHoveredStar)
 				{
 					lastHoveredStar = star;
-					if (selectedStars.Count > 0)
+					if (SelectedStars.Count > 0)
 					{
 						ConnectionManager.Instance.ConnectCurrentConnection(star);
 					}
@@ -91,7 +91,7 @@ public class StarManager : MonoBehaviour
 					if (!star.IsActive)
 					{
 						star.Activate();
-						selectedStars.Add(star);
+						SelectedStars.Add(star);
 					}
 				}
 			}, () => {
@@ -116,15 +116,29 @@ public class StarManager : MonoBehaviour
 		else if (nothingCallback != null)
 			nothingCallback();
 	}
+		
+	public void NewGame(int starCount = 10)
+	{
+		State = GameState.Default;
+		GenerateStars(starCount);
+	}
+
+	public void ResetSky()
+	{
+		for (int i = 0; i < AllStars.Count; i++)
+		{
+			AllStars[i].Deactivate();
+		}
+	}
 
 	public void GenerateStars(int count = 5)
 	{
-		for (int i = 0; i < allStars.Count; i++)
+		for (int i = 0; i < AllStars.Count; i++)
 		{
-			GameObject.Destroy(allStars[i].gameObject);
+			GameObject.Destroy(AllStars[i].gameObject);
 		}
 
-		allStars.Clear();
+		AllStars.Clear();
 		for (int i = 0; i < count; i++)
 		{
 			// instantiate star
@@ -137,11 +151,11 @@ public class StarManager : MonoBehaviour
 			do
 			{
 				newPosition = new Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
-				okPosition = !allStars.Exists(s => Vector2.Distance(s.transform.position, newPosition) < minStarDistance);
+				okPosition = !AllStars.Exists(s => Vector2.Distance(s.transform.position, newPosition) < minStarDistance);
 			} while (!okPosition);
 			star.transform.position = newPosition;
 
-			allStars.Add(star.GetComponent<Star>());
+			AllStars.Add(star.GetComponent<Star>());
 		}
 	}
 

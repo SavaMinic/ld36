@@ -7,11 +7,12 @@ public class ConnectionManager : MonoBehaviour
 
 	public static ConnectionManager Instance { get; private set; }
 
+	public List<Connection> Connections { get; private set; }
+
 	#endregion
 
 	#region Private fields
 
-	private List<Connection> connections = new List<Connection>();
 
 	private GameObject connectionPrefab;
 
@@ -23,6 +24,7 @@ public class ConnectionManager : MonoBehaviour
 	{
 		Instance = this;
 		connectionPrefab = Resources.Load("Prefabs/Connection") as GameObject;
+		Connections = new List<Connection>();
 	}
 
 	void Update()
@@ -54,13 +56,13 @@ public class ConnectionManager : MonoBehaviour
 			return;
 
 		// check if this connection already exists
-		if (!connections.Exists(c => 
+		if (!Connections.Exists(c => 
 			(c.from == currentConnection.from && c.to == to)
 		    || (c.from == to && c.to == currentConnection.from)
 		    ))
 		{
 			currentConnection.Connect(to);
-			connections.Add(currentConnection);
+			Connections.Add(currentConnection);
 		} else
 			DeleteCurrentConnection();
 
@@ -88,13 +90,13 @@ public class ConnectionManager : MonoBehaviour
 
 	#endregion
 
-	private void DeleteAllConnections()
+	public void DeleteAllConnections()
 	{
-		for (int i = 0; i < connections.Count; i++)
+		for (int i = 0; i < Connections.Count; i++)
 		{
-			GameObject.Destroy(connections[i].gameObject);
+			GameObject.Destroy(Connections[i].gameObject);
 		}
-		connections.Clear();
+		Connections.Clear();
 	}
 
 }
