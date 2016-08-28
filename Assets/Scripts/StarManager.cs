@@ -62,6 +62,11 @@ public class StarManager : MonoBehaviour
 
 	void Update()
 	{
+		if (Input.GetKey(KeyCode.Escape))
+		{
+			Application.Quit();
+		}
+			
 		// On click, we start to "drag"
 		if (Input.GetMouseButtonDown(0) && State == GameState.Default)
 		{
