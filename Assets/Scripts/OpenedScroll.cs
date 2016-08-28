@@ -11,6 +11,8 @@ public class OpenedScroll : MonoBehaviour
 	public float minX, maxX;
 	public float minY, maxY;
 
+	public float littleConnectionWidth;
+
 	#endregion
 
 	#region Private fields
@@ -27,6 +29,9 @@ public class OpenedScroll : MonoBehaviour
 	private GameObject littleStarPrefab;
 	private List<GameObject> littleStars = new List<GameObject>();
 
+	private GameObject littleConnectionPrefab;
+	private List<GameObject> littleConnections = new List<GameObject>();
+
 	#endregion
 
 	void Awake()
@@ -36,6 +41,7 @@ public class OpenedScroll : MonoBehaviour
 		myRenderer.enabled = false;
 		backFill = FindObjectOfType<BackFill>();
 		littleStarPrefab = Resources.Load<GameObject>("Prefabs/LittleStar");
+		littleConnectionPrefab = Resources.Load<GameObject>("Prefabs/LittleConnection");
 	}
 
 	public void Open()
@@ -70,6 +76,8 @@ public class OpenedScroll : MonoBehaviour
 		backFill.Hide();
 		// delete all stars, if any
 		littleStars.ForEach(obj => GameObject.Destroy(obj) );
+		// delete all connections, if any
+		littleConnections.ForEach(obj => GameObject.Destroy(obj) );
 	}
 
 	public void AnimateOpening()
@@ -103,7 +111,9 @@ public class OpenedScroll : MonoBehaviour
 			stars.Add(solution[i].From);
 			stars.Add(solution[i].To);
 		}
+
 		// generate stars
+		var positions = new Dictionary<Star, Vector3>();
 		foreach (var star in stars)
 		{
 			var littleStar = Instantiate<GameObject>(littleStarPrefab);
@@ -119,6 +129,27 @@ public class OpenedScroll : MonoBehaviour
 			var newy = minY + (maxY - minY) * ratioY;
 			littleStar.transform.position = new Vector3(newX, newy, -9f);
 			littleStars.Add(littleStar);
+
+			// save the position later for possible connections
+			positions.Add(star, littleStar.transform.position);
+		}
+
+
+		// generate little connections
+		for (int i = 0; i < solution.Count; i++)
+		{
+			Vector3 start = positions[solution[i].From];
+			Vector3 end = positions[solution[i].To];
+
+			var dir = end - start;
+			var position = start + (dir / 2f);
+
+			var littleConnection = Instantiate<GameObject>(littleConnectionPrefab);
+			littleConnection.transform.position = position;
+			littleConnection.transform.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+			littleConnection.transform.localScale = new Vector3(littleConnectionWidth, dir.magnitude / 2f, littleConnectionWidth);
+			littleConnection.transform.SetParent(transform);
+			littleConnections.Add(littleConnection);
 		}
 	}
 

@@ -933,9 +933,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minX: -3
-  maxX: 4
+  maxX: 3.9
   minY: -1
   maxY: 4.1
+  littleConnectionWidth: 0.05
 --- !u!1 &853364979
 GameObject:
   m_ObjectHideFlags: 0
@@ -1614,8 +1615,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1332253681}
-        m_MethodName: GenerateNewSolution
+      - m_Target: {fileID: 1332253680}
+        m_MethodName: 
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
