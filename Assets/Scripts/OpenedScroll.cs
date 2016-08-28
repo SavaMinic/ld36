@@ -4,6 +4,13 @@ using System;
 
 public class OpenedScroll : MonoBehaviour
 {
+	
+	#region Public fields
+
+
+	#endregion
+
+	#region Private fields
 
 	private Renderer myRenderer;
 
@@ -11,11 +18,16 @@ public class OpenedScroll : MonoBehaviour
 
 	private GoTween toggleAnimation;
 
+	private BackFill backFill;
+
+	#endregion
+
 	void Awake()
 	{
 		defaultScale = transform.localScale;
 		myRenderer = GetComponent<Renderer>();
 		myRenderer.enabled = false;
+		backFill = FindObjectOfType<BackFill>();
 	}
 
 	public void Open()
@@ -44,6 +56,7 @@ public class OpenedScroll : MonoBehaviour
 					callbackOnClosed();
 			})
 		);
+		backFill.Hide();
 	}
 
 	public void AnimateOpening()
@@ -51,6 +64,7 @@ public class OpenedScroll : MonoBehaviour
 		transform.localScale = new Vector3(0f, defaultScale.y, defaultScale.z);
 		toggleAnimation = Go.to(transform, 0.5f, new GoTweenConfig().vector3Prop("localScale", defaultScale).setEaseType(GoEaseType.BackInOut));
 		myRenderer.enabled = true;
+		backFill.Show();
 	}
 
 }

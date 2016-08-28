@@ -5,16 +5,26 @@ using System;
 public class Scroll : MonoBehaviour
 {
 
-	private static int openedScrollIndex = -1;
+	public static Scroll clickedScroll = null;
+
+	#region Public fields
 
 	public Vector3 endPosition;
 	public int scrollIndex;
+	public SpriteRenderer sprite;
+	public Color activeColor;
+
+	#endregion
+
+	#region Private fields
 
 	private Vector3 startPosition;
 
 	private GoTween moveAnimation = null;
 
 	private OpenedScroll openedScroll;
+
+	#endregion
 
 	void Awake()
 	{
@@ -38,17 +48,29 @@ public class Scroll : MonoBehaviour
 
 	void OnMouseUp()
 	{
-		if (openedScrollIndex != scrollIndex)
+		if (clickedScroll != this)
 		{
+			DeactivateClickedScroll();
 			// open scroll
-			openedScrollIndex = scrollIndex;
+			sprite.color = activeColor;
+			clickedScroll = this;
 			openedScroll.Open();
 		}
 		else
 		{
 			// close
-			openedScrollIndex = -1;
+			sprite.color = Color.white;
+			clickedScroll = null;
 			openedScroll.AnimateClose();
 		}
+	}
+
+	public static void DeactivateClickedScroll()
+	{
+		if (clickedScroll != null)
+		{
+			clickedScroll.sprite.color = Color.white;
+		}
+		clickedScroll = null;
 	}
 }
