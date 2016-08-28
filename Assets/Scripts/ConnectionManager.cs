@@ -50,7 +50,7 @@ public class ConnectionManager : MonoBehaviour
 		UpdateCurrentConnectionPosition();
 	}
 
-	public void ConnectCurrentConnection(Star to)
+	public void ConnectCurrentConnection(Star to, bool createNextConnection = true)
 	{
 		if (currentConnection == null)
 			return;
@@ -66,7 +66,8 @@ public class ConnectionManager : MonoBehaviour
 		} else
 			DeleteCurrentConnection();
 
-		CreateCurrentConnection(to);
+		if (createNextConnection)
+			CreateCurrentConnection(to);
 	}
 
 	public void UpdateCurrentConnectionPosition()
@@ -86,6 +87,15 @@ public class ConnectionManager : MonoBehaviour
 			GameObject.Destroy(currentConnection.gameObject);
 			currentConnection = null;
 		}
+	}
+
+	public void CreateConnection(Star from, Star to)
+	{
+		var connection = Instantiate<GameObject>(connectionPrefab).GetComponent<Connection>();
+		connection.Initialize(from);
+		connection.Connect(to);
+		Debug.Log("CONNECTION " + from.ID + " " + to.ID);
+		Connections.Add(connection);
 	}
 
 	#endregion
