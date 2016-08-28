@@ -7,10 +7,13 @@ public class InputController : MonoBehaviour
 
 	public Button resetButton;
 	public Button skipButton;
+	public Text scoreText;
 
 	private Text skipText;
 
-	public float skipTime;
+	private float skipTime;
+
+	private int score;
 
 	void Awake()
 	{
@@ -51,14 +54,27 @@ public class InputController : MonoBehaviour
 
 	public void ShowButtons()
 	{
+		StartCoroutine(ShowButtonsWithDelay());
+	}
+
+	private IEnumerator ShowButtonsWithDelay()
+	{
+		yield return new WaitForSeconds(0.4f);
 		resetButton.gameObject.SetActive(true);
 		skipButton.gameObject.SetActive(true);
+		scoreText.gameObject.SetActive(true);
 	}
 
 	public void HideButtons()
 	{
 		resetButton.gameObject.SetActive(false);
 		skipButton.gameObject.SetActive(false);
+		scoreText.gameObject.SetActive(false);
+	}
+
+	public void IncreaseScore()
+	{
+		scoreText.text = "Score: " + (++score);
 	}
 
 }

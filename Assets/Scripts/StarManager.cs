@@ -265,6 +265,7 @@ public class StarManager : MonoBehaviour
 	private void Victory()
 	{
 		State = GameState.Victory;
+		FindObjectOfType<InputController>().IncreaseScore();
 		KingManager.Instance.StartTalk(new List<string>() {
 			"What? Really?\n\n<b><i>" + CurrentAnswers[WinningIndex] + "?</i></b>\n\nInteresting!",
 			"I have something more to ask..."
