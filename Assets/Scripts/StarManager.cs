@@ -72,6 +72,11 @@ public class StarManager : MonoBehaviour
 		else if (Input.GetMouseButtonUp(0) && State == GameState.Dragging)
 		{
 			State = GameState.Default;
+			if (SelectedStars.Count == 1 
+				&& !ConnectionManager.Instance.Connections.Exists(c => c.from == SelectedStars[0] || c.to == SelectedStars[0]))
+			{
+				SelectedStars[0].Deactivate();
+			}
 			SelectedStars.Clear();
 			ConnectionManager.Instance.DeleteCurrentConnection();
 		}
