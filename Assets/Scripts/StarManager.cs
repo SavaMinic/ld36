@@ -10,6 +10,8 @@ public class StarManager : MonoBehaviour
 	{
 		Default = 0,
 		Dragging,
+		Victory,
+		Death
 	}
 
 	#region Properties
@@ -83,6 +85,10 @@ public class StarManager : MonoBehaviour
 			}
 			SelectedStars.Clear();
 			ConnectionManager.Instance.DeleteCurrentConnection();
+			if (CheckVictory())
+			{
+				Victory();
+			}
 		}
 		// Still dragging
 		else if (Input.GetMouseButton(0) && State == GameState.Dragging)
@@ -176,4 +182,28 @@ public class StarManager : MonoBehaviour
 		}
 	}
 
+	private bool CheckVictory()
+	{
+		var solution = SolutionManager.Instance.Solutions[WinningIndex];
+		var selectedConnections = new List<Connection>(ConnectionManager.Instance.Connections);
+		for (int i = 0; i < solution.Count; i++)
+		{
+			// check if this connection from solution exits in selected ones
+			var match = selectedConnections.Find(c => 
+				(c.from == solution[i].From && c.to == solution[i].To)
+		         || (c.from == solution[i].To && c.to == solution[i].From)
+			);
+			if (match == null)
+				return false;
+			selectedConnections.Remove(match);
+		}
+		// all connection in solution are selected
+		// check if there are no extra ones
+		return selectedConnections.Count == 0;
+	}
+
+	private void Victory()
+	{
+		State = GameState.Victory;
+	}
 }

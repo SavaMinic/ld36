@@ -50,6 +50,9 @@ TagManager:
   - name: Scroll
     uniqueID: 3276300929
     locked: 0
+  - name: EndGameFill
+    uniqueID: 979231615
+    locked: 0
   - name: OpenedScroll
     uniqueID: 3805182587
     locked: 0

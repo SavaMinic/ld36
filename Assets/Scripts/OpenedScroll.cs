@@ -103,6 +103,9 @@ public class OpenedScroll : MonoBehaviour
 
 	private void DisplaySolution()
 	{
+		if (Scroll.clickedScroll == null)
+			return;
+		
 		// draw all stars in solution
 		var stars = new HashSet<Star>();
 		var solution = SolutionManager.Instance.Solutions[Scroll.clickedScroll.scrollIndex];
