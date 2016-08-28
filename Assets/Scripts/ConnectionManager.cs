@@ -89,10 +89,10 @@ public class ConnectionManager : MonoBehaviour
 		}
 	}
 
-	public void CreateConnection(Star from, Star to)
+	public void CreateConnection(Star from, Star to, bool isSolution = false)
 	{
 		var connection = Instantiate<GameObject>(connectionPrefab).GetComponent<Connection>();
-		connection.Initialize(from);
+		connection.Initialize(from, isSolution);
 		connection.Connect(to);
 		Connections.Add(connection);
 	}

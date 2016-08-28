@@ -38,7 +38,7 @@ public class SolutionManager : MonoBehaviour
 
 	public void GenerateNewSolution(int index = 0)
 	{
-		int straightLimit = Random.Range(2,3);
+		int straightLimit = Random.Range(2,4);
 		int branchOut = Random.Range(0, 3) + 4 - straightLimit;
 		Debug.Log("Generating solution! " + straightLimit + " branch " + branchOut);
 		Solutions[index].Clear();
@@ -75,7 +75,8 @@ public class SolutionManager : MonoBehaviour
 	{
 		if (solution.Count == 0)
 			return;
-		var branchOutStar = solution.GetRandom().From;
+		var branch = solution.GetRandom();
+		var branchOutStar = Random.value > 0.5f ? branch.From : branch.To;
 		var freeStar = freeStars.GetRandom();
 		solution.Add(new SolutionConnection(branchOutStar, freeStar));
 		freeStars.Remove(freeStar);
@@ -118,9 +119,13 @@ public class SolutionManager : MonoBehaviour
 	public void ShowSolution()
 	{
 		ConnectionManager.Instance.DeleteAllConnections();
-		for (int i = 0; i < Solutions[0].Count; i++)
+		for (int i = 0; i < Solutions[StarManager.Instance.WinningIndex].Count; i++)
 		{
-			ConnectionManager.Instance.CreateConnection(Solutions[0][i].From, Solutions[0][i].To);
+			ConnectionManager.Instance.CreateConnection(
+				Solutions[StarManager.Instance.WinningIndex][i].From,
+				Solutions[StarManager.Instance.WinningIndex][i].To,
+				true
+			);
 		}
 	}
 

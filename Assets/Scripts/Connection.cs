@@ -11,10 +11,15 @@ public class Connection : MonoBehaviour
 
 	private float width;
 
-	public void Initialize(Star fromStar, float width = 0.3f)
+	public void Initialize(Star fromStar, bool isSolution = false)
 	{
 		from = fromStar;
-		this.width = width;
+		this.width = 0.3f;
+		if (isSolution)
+		{
+			GetComponent<MeshRenderer>().material.color = Color.red;
+			this.width = 0.2f;
+		}
 	}
 
 	public void LookAt(Vector3 to)
