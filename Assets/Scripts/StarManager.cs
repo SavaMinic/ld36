@@ -171,9 +171,6 @@ public class StarManager : MonoBehaviour
 		// get the problem
 		var problem = KingManager.Instance.GetRandomProblem();
 		CurrentProblem = problem.Text;
-		KingManager.Instance.StartTalk(new List<string>() {
-			problem.Text
-		});
 		// generate answers
 		problem.Answers.Shuffle();
 		CurrentAnswers.Clear();
@@ -181,11 +178,17 @@ public class StarManager : MonoBehaviour
 		{
 			CurrentAnswers.Add(problem.Answers[i]);
 		}
+
+		// start the talk
+		KingManager.Instance.StartTalk(new List<string>() {
+			problem.Text
+		});
 	}
 
 	public void StartGame()
 	{
 		State = GameState.Default;
+		FindObjectOfType<InputController>().ShowButtons();
 	}
 
 	public void GenerateStars()
@@ -265,6 +268,14 @@ public class StarManager : MonoBehaviour
 		KingManager.Instance.StartTalk(new List<string>() {
 			"What? Really?\n\n<b><i>" + CurrentAnswers[WinningIndex] + "?</i></b>\n\nInteresting!",
 			"I have something more to ask..."
+		}, true, true);
+	}
+
+	public void Skip()
+	{
+		State = GameState.Victory;
+		KingManager.Instance.StartTalk(new List<string>() {
+			"Damn, I guess it's too cloudy to see the stars."
 		}, true, true);
 	}
 }

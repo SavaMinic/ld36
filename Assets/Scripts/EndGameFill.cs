@@ -6,6 +6,7 @@ public class EndGameFill : MonoBehaviour
 
 	private SpriteRenderer sprite;
 	private Color transparent = new Color(1f, 1f, 1f, 0f);
+	private GoTween fadeAnimation;
 
 	void Awake()
 	{
@@ -23,13 +24,21 @@ public class EndGameFill : MonoBehaviour
 
 	public void Show()
 	{
+		if (fadeAnimation != null)
+		{
+			fadeAnimation.destroy();
+		}
 		gameObject.SetActive(true);
-		Go.to(sprite, .4f, new GoTweenConfig().colorProp("color", Color.white));
+		fadeAnimation = Go.to(sprite, .4f, new GoTweenConfig().colorProp("color", Color.white));
 	}
 
 	public void Hide()
 	{
-		Go.to(sprite, .4f, new GoTweenConfig().colorProp("color", transparent));
+		if (fadeAnimation != null)
+		{
+			fadeAnimation.destroy();
+		}
+		fadeAnimation = Go.to(sprite, .4f, new GoTweenConfig().colorProp("color", transparent));
 		gameObject.SetActive(false);
 	}
 }

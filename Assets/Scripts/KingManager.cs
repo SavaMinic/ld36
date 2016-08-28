@@ -51,6 +51,8 @@ public class KingManager : MonoBehaviour
 
 	private List<Problem> availableProblems = new List<Problem>();
 
+	private GoTween kingAnimation;
+
 	#endregion
 
 	void Awake()
@@ -61,19 +63,27 @@ public class KingManager : MonoBehaviour
 
 	public void StartTalk(List<string> talks, bool isIntro = false, bool generateStars = false)
 	{
+		FindObjectOfType<InputController>().HideButtons();
 		this.talks = talks;
 		this.isIntro = isIntro;
 		this.generateStars = generateStars;
 		background.Show();
-		king.transform.position = startPosition;
-		Go.to(king.transform, 1.2f, new GoTweenConfig().position(talkPosition).setEaseType(GoEaseType.BackInOut));
+		if (kingAnimation != null)
+		{
+			kingAnimation.destroy();
+		}
+		kingAnimation = Go.to(king.transform, 1.2f, new GoTweenConfig().position(talkPosition).setEaseType(GoEaseType.BackInOut));
 		NextTalk();
 	}
 
 	public void EndTalk()
 	{
 		background.Hide();
-		Go.to(king.transform, 0.6f, new GoTweenConfig().position(startPosition).setEaseType(GoEaseType.BackInOut));
+		if (kingAnimation != null)
+		{
+			kingAnimation.destroy();
+		}
+		kingAnimation = Go.to(king.transform, 0.6f, new GoTweenConfig().position(startPosition).setEaseType(GoEaseType.BackInOut));
 		Go.to(bubble, 0.25f, new GoTweenConfig().colorProp("color", invisibleColor));
 		Go.to(bubbleText, 0.25f, new GoTweenConfig().colorProp("color", noTextColor));
 	}
