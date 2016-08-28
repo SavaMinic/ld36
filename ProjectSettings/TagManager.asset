@@ -14,7 +14,7 @@ TagManager:
   - 
   - 
   - Stars
-  - 
+  - Scroll
   - 
   - 
   - 
@@ -40,4 +40,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Back
+    uniqueID: 2429327471
+    locked: 0
+  - name: Scroll
+    uniqueID: 3276300929
     locked: 0
