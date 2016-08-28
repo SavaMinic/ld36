@@ -4,25 +4,46 @@ using System.Collections;
 public class Star : MonoBehaviour
 {
 
+	public ParticleSystem starDefault;
+	public ParticleSystem starActive;
+	public Renderer littleStar;
+
 	public bool IsSelected { get; private set; }
+	public bool IsActive { get; private set; }
 
-	private Renderer myRenderer;
+	public int ConnectionCount { get; set; }
 
-	void Awake()
-	{
-		myRenderer = GetComponent<Renderer>();
-	}
-
-	public void Select()
+	public void SelectAndActivate()
 	{
 		IsSelected = true;
-		myRenderer.material.color = Color.red;
+		IsActive = true;
+		starDefault.Pause();
+		starActive.Play();
+		littleStar.enabled = false;
 	}
 
 	public void Deselect()
 	{
 		IsSelected = false;
-		myRenderer.material.color = Color.white;
+		if (ConnectionCount == 0)
+		{
+			Deactivate();
+		}
+	}
+
+	public void Deactivate()
+	{
+		if (ConnectionCount > 0)
+		{
+			ConnectionCount--;
+		}
+		if (ConnectionCount == 0)
+		{
+			IsActive = false;
+			starActive.Stop();
+			starDefault.Play();
+			littleStar.enabled = true;
+		}
 	}
 	
 }

@@ -31,6 +31,8 @@ public class Connection : MonoBehaviour
 	{
 		to = toStar;
 		LookAt(to.transform.position);
+		from.ConnectionCount++;
+		to.ConnectionCount++;
 	}
 
 }

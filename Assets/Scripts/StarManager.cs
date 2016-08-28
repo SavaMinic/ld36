@@ -63,7 +63,7 @@ public class StarManager : MonoBehaviour
 			{
 				State = GameState.Dragging;
 				lastHoveredStar = star;
-				star.Select();
+				star.SelectAndActivate();
 				selectedStars.Add(star);
 				ConnectionManager.Instance.CreateCurrentConnection(star);
 			});
@@ -77,6 +77,7 @@ public class StarManager : MonoBehaviour
 				selectedStars[i].Deselect();
 			}
 			selectedStars.Clear();
+			ConnectionManager.Instance.DeleteCurrentConnection();
 		}
 		// Still dragging
 		else if (Input.GetMouseButton(0) && State == GameState.Dragging)
@@ -93,13 +94,14 @@ public class StarManager : MonoBehaviour
 						{
 							ConnectionManager.Instance.ConnectCurrentConnection(star);
 						}
-						star.Select();
+						star.SelectAndActivate();
 						selectedStars.Add(star);
 					}
-					// if it's selected and it's last star, unselect it
-					else if (star.IsSelected && selectedStars[selectedStars.Count - 1] == star)
+					// if it's selected and it's recent added star (but last star), unselect it
+					else if (star.IsSelected && selectedStars.Count > 1 && selectedStars[selectedStars.Count - 1] == star)
 					{
 						star.Deselect();
+						star.Deactivate();
 						selectedStars.Remove(star);
 						ConnectionManager.Instance.DeleteLastConnection();
 					}

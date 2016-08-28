@@ -12,6 +12,7 @@ public class ConnectionManager : MonoBehaviour
 	#region Private fields
 
 	private List<Connection> connections = new List<Connection>();
+	private List<Connection> finalConnections = new List<Connection>();
 
 	private GameObject connectionPrefab;
 
@@ -27,6 +28,7 @@ public class ConnectionManager : MonoBehaviour
 
 	void Update()
 	{
+		// Released the button while dragging
 		if (Input.GetMouseButtonUp(0) && StarManager.Instance.State == StarManager.GameState.Dragging)
 		{
 			if (currentConnection != null)
@@ -34,6 +36,8 @@ public class ConnectionManager : MonoBehaviour
 				GameObject.Destroy(currentConnection.gameObject);
 				currentConnection = null;
 			}
+			finalConnections.AddRange(connections);
+			connections.Clear();
 		}
 	}
 
@@ -71,9 +75,24 @@ public class ConnectionManager : MonoBehaviour
 	{
 		if (connections.Count > 0)
 		{
-			var connection = connections[connections.Count - 1];
-			connections.Remove(connection);
-			GameObject.Destroy(connection.gameObject);
+			// delete last added connection
+			var lastConnection = connections[connections.Count - 1];
+			connections.Remove(lastConnection);
+			GameObject.Destroy(lastConnection.gameObject);
+
+			// delete current connection
+			DeleteCurrentConnection();
+			// and make a new one
+			CreateCurrentConnection(lastConnection.from);
+		}
+	}
+
+	public void DeleteCurrentConnection()
+	{
+		if (currentConnection != null)
+		{
+			GameObject.Destroy(currentConnection.gameObject);
+			currentConnection = null;
 		}
 	}
 
@@ -81,11 +100,11 @@ public class ConnectionManager : MonoBehaviour
 
 	private void DeleteAllConnections()
 	{
-		for (int i = 0; i < connections.Count; i++)
+		for (int i = 0; i < finalConnections.Count; i++)
 		{
-			GameObject.Destroy(connections[i].gameObject);
+			GameObject.Destroy(finalConnections[i].gameObject);
 		}
-		connections.Clear();
+		finalConnections.Clear();
 	}
 
 }
