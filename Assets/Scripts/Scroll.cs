@@ -34,6 +34,9 @@ public class Scroll : MonoBehaviour
 
 	void OnMouseEnter()
 	{
+		if (!StarManager.Instance.IsPlaying)
+			return;
+		
 		if (moveAnimation != null)
 		{
 			moveAnimation.complete();
@@ -44,6 +47,9 @@ public class Scroll : MonoBehaviour
 
 	void OnMouseExit()
 	{
+		if (!StarManager.Instance.IsPlaying)
+			return;
+		
 		if (moveAnimation != null)
 		{
 			moveAnimation.complete();
@@ -54,6 +60,9 @@ public class Scroll : MonoBehaviour
 
 	void OnMouseUp()
 	{
+		if (!StarManager.Instance.IsPlaying)
+			return;
+		
 		if (clickedScroll != this)
 		{
 			DeactivateClickedScroll();

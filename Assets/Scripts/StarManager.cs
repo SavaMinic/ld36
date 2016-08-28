@@ -9,6 +9,7 @@ public class StarManager : MonoBehaviour
 	public enum GameState
 	{
 		Default = 0,
+		Talking,
 		Dragging,
 		Victory,
 		Death
@@ -19,6 +20,7 @@ public class StarManager : MonoBehaviour
 	public static StarManager Instance { get; private set; }
 
 	public GameState State { get; private set; }
+	public bool IsPlaying { get { return State == GameState.Default || State == GameState.Dragging; } }
 
 	public List<List<Star>> AllStars { get; private set; }
 	public List<Star> SelectedStars { get; private set; }
@@ -136,10 +138,26 @@ public class StarManager : MonoBehaviour
 		else if (nothingCallback != null)
 			nothingCallback();
 	}
+
+	public void StartGame()
+	{
+		State = GameState.Default;
+	}
 		
 	public void NewGame(int starCount = 10)
 	{
-		State = GameState.Default;
+		State = GameState.Talking;
+		KingManager.Instance.StartTalk(new List<string>() {
+			"Hey, you!\n\nYup, you there...",
+			"You look smart, with that pointy hat and those glasses.",
+			"My previous prophet had an 'accident',\nso we need a guy to fill in...",
+			"Your job is to answer to all of urgent and kingdom critical questions I have...",
+			"... by looking up answers in the sky.",
+			"Use scrolls to help you solve the answer!",
+			//"Don't try to be lazy!\n\nI really dislike lazy people",
+			//"They tend to have 'accidents'..."
+		});
+
 		WinningIndex = Random.Range(0, 2);
 		GenerateStars(0, starCount);
 		SolutionManager.Instance.GenerateNewSolution(0);
