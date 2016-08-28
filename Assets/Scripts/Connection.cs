@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class Connection : MonoBehaviour
 {
@@ -31,8 +32,6 @@ public class Connection : MonoBehaviour
 	{
 		to = toStar;
 		LookAt(to.transform.position);
-		from.ConnectionCount++;
-		to.ConnectionCount++;
 	}
 
 }

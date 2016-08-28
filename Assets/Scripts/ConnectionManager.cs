@@ -12,7 +12,6 @@ public class ConnectionManager : MonoBehaviour
 	#region Private fields
 
 	private List<Connection> connections = new List<Connection>();
-	private List<Connection> finalConnections = new List<Connection>();
 
 	private GameObject connectionPrefab;
 
@@ -36,8 +35,6 @@ public class ConnectionManager : MonoBehaviour
 				GameObject.Destroy(currentConnection.gameObject);
 				currentConnection = null;
 			}
-			finalConnections.AddRange(connections);
-			connections.Clear();
 		}
 	}
 
@@ -55,9 +52,18 @@ public class ConnectionManager : MonoBehaviour
 	{
 		if (currentConnection == null)
 			return;
-		
-		currentConnection.Connect(to);
-		connections.Add(currentConnection);
+
+		// check if this connection already exists
+		if (!connections.Exists(c => 
+			(c.from == currentConnection.from && c.to == to)
+		    || (c.from == to && c.to == currentConnection.from)
+		    ))
+		{
+			currentConnection.Connect(to);
+			connections.Add(currentConnection);
+		} else
+			DeleteCurrentConnection();
+
 		CreateCurrentConnection(to);
 	}
 
@@ -68,22 +74,6 @@ public class ConnectionManager : MonoBehaviour
 			var mousePosition = Input.mousePosition;
 			mousePosition.z = 10f;
 			currentConnection.LookAt(Camera.main.ScreenToWorldPoint(mousePosition));
-		}
-	}
-
-	public void DeleteLastConnection()
-	{
-		if (connections.Count > 0)
-		{
-			// delete last added connection
-			var lastConnection = connections[connections.Count - 1];
-			connections.Remove(lastConnection);
-			GameObject.Destroy(lastConnection.gameObject);
-
-			// delete current connection
-			DeleteCurrentConnection();
-			// and make a new one
-			CreateCurrentConnection(lastConnection.from);
 		}
 	}
 
@@ -100,11 +90,11 @@ public class ConnectionManager : MonoBehaviour
 
 	private void DeleteAllConnections()
 	{
-		for (int i = 0; i < finalConnections.Count; i++)
+		for (int i = 0; i < connections.Count; i++)
 		{
-			GameObject.Destroy(finalConnections[i].gameObject);
+			GameObject.Destroy(connections[i].gameObject);
 		}
-		finalConnections.Clear();
+		connections.Clear();
 	}
 
 }

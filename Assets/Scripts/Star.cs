@@ -1,49 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class Star : MonoBehaviour
 {
+
+	private static int sID = 0;
+
 
 	public ParticleSystem starDefault;
 	public ParticleSystem starActive;
 	public Renderer littleStar;
 
-	public bool IsSelected { get; private set; }
+	public int ID { get; private set; }
 	public bool IsActive { get; private set; }
 
-	public int ConnectionCount { get; set; }
-
-	public void SelectAndActivate()
+	void Awake()
 	{
-		IsSelected = true;
+		ID = ++sID;
+	}
+
+	public void Activate()
+	{
 		IsActive = true;
 		starDefault.Pause();
 		starActive.Play();
 		littleStar.enabled = false;
 	}
 
-	public void Deselect()
-	{
-		IsSelected = false;
-		if (ConnectionCount == 0)
-		{
-			Deactivate();
-		}
-	}
-
 	public void Deactivate()
 	{
-		if (ConnectionCount > 0)
-		{
-			ConnectionCount--;
-		}
-		if (ConnectionCount == 0)
-		{
-			IsActive = false;
-			starActive.Stop();
-			starDefault.Play();
-			littleStar.enabled = true;
-		}
+		IsActive = false;
+		starActive.Stop();
+		starDefault.Play();
+		littleStar.enabled = true;
 	}
-	
+
 }
