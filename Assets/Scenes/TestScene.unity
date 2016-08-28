@@ -878,7 +878,6 @@ MonoBehaviour:
   resetButton: {fileID: 535562386}
   skipButton: {fileID: 660892909}
   scoreText: {fileID: 1137178638}
-  skipTime: 0
 --- !u!114 &661193633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1156,7 +1155,7 @@ MonoBehaviour:
     - Yes, oh, yes.
     - Indeed they are.
     - Invest in some insurance
-  - Text: Is it raining on Friday? I am organizing a witch hunt.
+  - Text: Is it raining on Friday?I am organizing a witch hunt.
     Answers:
     - Blizzard incoming.
     - Wiches can float.
@@ -1168,6 +1167,43 @@ MonoBehaviour:
     - Yes, in distant future
     - Maiden? Yes. Fair? No.
     - Fair? Yes. Maiden? No.
+  - Text: What is my favourite color?
+    Answers:
+    - Blue
+    - Yellow
+    - I don't know.
+  - Text: What is the air-speed velocity of an unladen swallow?
+    Answers:
+    - An African or European swallow?
+    - 11 meters per second
+    - I don't know.
+  - Text: Who will be the next pope?
+    Answers:
+    - I can tell who is not going to be.
+    - Some cardinal, I suppose.
+    - A rabbit.
+    - A rabbit with a hat.
+  - Text: How to recognize a witch?
+    Answers:
+    - She's made of wood.
+    - She floats in water.
+    - She weights as a duck.
+  - Text: Should I trust my advisors?
+    Answers:
+    - Better to trust snakes.
+    - For early retirement, yes.
+    - No more than your family.
+    - Trust them. NOT.
+  - Text: Do dragons exists in our world?
+    Answers:
+    - A long time ago, yes.
+    - They will return.
+    - Only lizard people.
+  - Text: Is Winter coming?
+    Answers:
+    - Winter is coming.
+    - Winter is coming.
+    - Winter is coming.
 --- !u!4 &756328902
 Transform:
   m_ObjectHideFlags: 0
@@ -1654,8 +1690,8 @@ RectTransform:
   m_RootOrder: 5
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -741, y: 484}
-  m_SizeDelta: {x: 375, y: 88}
+  m_AnchoredPosition: {x: -842, y: 439.25}
+  m_SizeDelta: {x: 200, y: 177.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1137178638
 MonoBehaviour:
@@ -1683,13 +1719,15 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 4
     m_MaxSize: 56
-    m_Alignment: 3
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'SCORE: 0'
+  m_Text: 'SCORE
+
+    0'
 --- !u!222 &1137178639
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1913,8 +1951,8 @@ RectTransform:
   m_RootOrder: 2
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 63.750076, y: 492}
-  m_SizeDelta: {x: 1792, y: 96}
+  m_AnchoredPosition: {x: 79.75, y: 492}
+  m_SizeDelta: {x: 1760.5, y: 96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1456851416
 MonoBehaviour:

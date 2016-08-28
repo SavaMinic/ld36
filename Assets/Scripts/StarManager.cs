@@ -148,7 +148,7 @@ public class StarManager : MonoBehaviour
 		State = GameState.Talking;
 		KingManager.Instance.StartTalk(new List<string>() {
 			"Hey, you!\n\nYup, you there...",
-			"You look smart, with that pointy hat and those glasses.",
+			"You look smart,\nwith that pointy hat and those glasses.",
 			"My previous prophet had an <i>'accident'</i>,\nso we need someone to fill in...",
 			"Your job is to answer to all of urgent and kingdom critical questions I have...",
 			"... by looking up answers in the sky.",

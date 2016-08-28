@@ -74,7 +74,7 @@ public class InputController : MonoBehaviour
 
 	public void IncreaseScore()
 	{
-		scoreText.text = "Score: " + (++score);
+		scoreText.text = "Score\n" + (++score);
 	}
 
 }
