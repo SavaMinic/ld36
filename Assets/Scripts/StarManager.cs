@@ -126,6 +126,9 @@ public class StarManager : MonoBehaviour
 	{
 		State = GameState.Default;
 		GenerateStars(starCount);
+		SolutionManager.Instance.GenerateNewSolution(0);
+		SolutionManager.Instance.GenerateNewSolution(1);
+		SolutionManager.Instance.GenerateNewSolution(2);
 	}
 
 	public void ResetSky()

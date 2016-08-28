@@ -41,7 +41,10 @@ public class OpenedScroll : MonoBehaviour
 	public void Open()
 	{
 		if (toggleAnimation != null)
+		{
 			toggleAnimation.complete();
+			toggleAnimation.destroy();
+		}
 		if (myRenderer.enabled)
 		{
 			AnimateClose(AnimateOpening);
@@ -94,7 +97,7 @@ public class OpenedScroll : MonoBehaviour
 	{
 		// draw all stars in solution
 		var stars = new HashSet<Star>();
-		var solution = SolutionManager.Instance.RequiredConnections;
+		var solution = SolutionManager.Instance.Solutions[Scroll.clickedScroll.scrollIndex];
 		for (int i = 0; i < solution.Count; i++)
 		{
 			stars.Add(solution[i].From);

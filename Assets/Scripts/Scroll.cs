@@ -35,14 +35,20 @@ public class Scroll : MonoBehaviour
 	void OnMouseEnter()
 	{
 		if (moveAnimation != null)
+		{
 			moveAnimation.complete();
+			moveAnimation.destroy();
+		}
 		moveAnimation = Go.to(transform, .4f, new GoTweenConfig().position(endPosition).setEaseType(GoEaseType.BackInOut));
 	}
 
 	void OnMouseExit()
 	{
 		if (moveAnimation != null)
+		{
 			moveAnimation.complete();
+			moveAnimation.destroy();
+		}
 		moveAnimation = Go.to(transform, .4f, new GoTweenConfig().position(startPosition).setEaseType(GoEaseType.BackInOut));
 	}
 
