@@ -27,6 +27,8 @@ public class StarManager : MonoBehaviour
 
 	public int WinningIndex { get; private set; }
 
+	public List<string> CurrentAnswers { get; private set; }
+
 	#endregion
 
 	#region Public fields
@@ -55,6 +57,7 @@ public class StarManager : MonoBehaviour
 		for (int i = 0; i < 3; i++)
 			AllStars.Add(new List<Star>());
 		SelectedStars = new List<Star>();
+		CurrentAnswers = new List<string>();
 	}
 
 	void Start()
@@ -138,26 +141,51 @@ public class StarManager : MonoBehaviour
 		else if (nothingCallback != null)
 			nothingCallback();
 	}
-
-	public void StartGame()
-	{
-		State = GameState.Default;
-	}
 		
-	public void NewGame(int starCount = 10)
+	public void NewGame()
 	{
 		State = GameState.Talking;
 		KingManager.Instance.StartTalk(new List<string>() {
 			"Hey, you!\n\nYup, you there...",
 			"You look smart, with that pointy hat and those glasses.",
-			"My previous prophet had an 'accident',\nso we need a guy to fill in...",
+			"My previous prophet had an 'accident',\nso we need someone to fill in...",
 			"Your job is to answer to all of urgent and kingdom critical questions I have...",
 			"... by looking up answers in the sky.",
-			"Use scrolls to help you solve the answer!",
+			"Use scrolls to help you solve the answer,\ndrag to connect star!",
 			//"Don't try to be lazy!\n\nI really dislike lazy people",
 			//"They tend to have 'accidents'..."
-		});
+		}, true);
+		GenerateStars();
+	}
 
+	public void NewRound(bool generateStars = true)
+	{
+		State = GameState.Talking;
+		if (generateStars)
+		{
+			GenerateStars();
+		}
+		var problem = KingManager.Instance.GetRandomProblem();
+		KingManager.Instance.StartTalk(new List<string>() {
+			problem.Text
+		});
+		// generate answers
+		problem.Answers.Shuffle();
+		CurrentAnswers.Clear();
+		for (int i = 0; i < 3; i++)
+		{
+			CurrentAnswers.Add(problem.Answers[i]);
+		}
+	}
+
+	public void StartGame()
+	{
+		State = GameState.Default;
+	}
+
+	public void GenerateStars()
+	{
+		int starCount = 10;
 		WinningIndex = Random.Range(0, 2);
 		GenerateStars(0, starCount);
 		SolutionManager.Instance.GenerateNewSolution(0);

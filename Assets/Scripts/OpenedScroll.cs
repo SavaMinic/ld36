@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using Random = UnityEngine.Random;
+using UnityEngine.UI;
 
 public class OpenedScroll : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class OpenedScroll : MonoBehaviour
 	public float minY, maxY;
 
 	public float littleConnectionWidth;
+
+	public Text answerText;
 
 	#endregion
 
@@ -31,6 +34,8 @@ public class OpenedScroll : MonoBehaviour
 
 	private GameObject littleConnectionPrefab;
 	private List<GameObject> littleConnections = new List<GameObject>();
+
+	private Color noTextColor =new Color(1f,1f,1f,0f);
 
 	#endregion
 
@@ -63,6 +68,7 @@ public class OpenedScroll : MonoBehaviour
 
 	public void AnimateClose(Action callbackOnClosed = null)
 	{
+		Go.to(answerText, 0.3f, new GoTweenConfig().colorProp("color", noTextColor));
 		var endScale = new Vector3(0f, defaultScale.y, defaultScale.z);
 		toggleAnimation = Go.to(transform, 0.5f,new GoTweenConfig()
 			.vector3Prop("localScale", endScale).setEaseType(GoEaseType.BackInOut)
@@ -105,10 +111,15 @@ public class OpenedScroll : MonoBehaviour
 	{
 		if (Scroll.clickedScroll == null)
 			return;
+		var index = Scroll.clickedScroll.scrollIndex;
+
+		// show answer
+		answerText.text = StarManager.Instance.CurrentAnswers[index];
+		Go.to(answerText, 0.3f, new GoTweenConfig().colorProp("color", Color.white));
 		
 		// draw all stars in solution
 		var stars = new HashSet<Star>();
-		var solution = SolutionManager.Instance.Solutions[Scroll.clickedScroll.scrollIndex];
+		var solution = SolutionManager.Instance.Solutions[index];
 		for (int i = 0; i < solution.Count; i++)
 		{
 			stars.Add(solution[i].From);

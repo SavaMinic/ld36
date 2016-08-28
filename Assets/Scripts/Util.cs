@@ -45,4 +45,16 @@ public static class Util
 
 		return (r >= 0 && r <= 1) && (s >= 0 && s <= 1);
 	}
+
+	public static void Shuffle<T>(this List<T> list)
+	{
+		int count = list.Count;
+		for (int index = 0; index < count; index++)
+		{
+			int chosenOne = UnityEngine.Random.Range(index, count);
+			T temp = list[index];
+			list[index] = list[chosenOne];
+			list[chosenOne] = temp;
+		}
+	}
 }

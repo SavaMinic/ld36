@@ -8,6 +8,13 @@ using System.Collections;
 public class KingManager : MonoBehaviour
 {
 
+	[Serializable]
+	public class Problem
+	{
+		public string Text;
+		public List<string> Answers;
+	}
+
 	#region Properties
 
 	public static KingManager Instance { get; private set; }
@@ -26,6 +33,8 @@ public class KingManager : MonoBehaviour
 
 	public float talkDelay;
 
+	public List<Problem> problems;
+
 	#endregion
 
 	#region Private fields
@@ -37,6 +46,8 @@ public class KingManager : MonoBehaviour
 	private Color noTextColor = new Color(0.2f, 0.2f, 0.2f, 0f);
 	private Color invisibleColor = new Color(1f, 1f, 1f, 0f);
 
+	private bool isIntro;
+
 	#endregion
 
 	void Awake()
@@ -45,10 +56,12 @@ public class KingManager : MonoBehaviour
 		startPosition = king.transform.position;
 	}
 
-	public void StartTalk(List<string> talks)
+	public void StartTalk(List<string> talks, bool isIntro = false)
 	{
 		this.talks = talks;
+		this.isIntro = isIntro;
 		background.Show();
+		king.transform.position = startPosition;
 		Go.to(king.transform, 1.2f, new GoTweenConfig().position(talkPosition).setEaseType(GoEaseType.BackInOut));
 		NextTalk();
 	}
@@ -66,7 +79,14 @@ public class KingManager : MonoBehaviour
 		if (talks.Count == 0)
 		{
 			EndTalk();
-			StarManager.Instance.StartGame();
+			if (isIntro)
+			{
+				StarManager.Instance.NewRound(false);
+			}
+			else
+			{
+				StarManager.Instance.StartGame();
+			}
 		}
 		else
 		{
@@ -87,6 +107,11 @@ public class KingManager : MonoBehaviour
 		bubbleText.text = text;
 		Go.to(bubble, 0.3f, new GoTweenConfig().colorProp("color", Color.white));
 		Go.to(bubbleText, 0.3f, new GoTweenConfig().colorProp("color", textColor));
+	}
+
+	public Problem GetRandomProblem()
+	{
+		return problems.GetRandom();
 	}
 
 }
