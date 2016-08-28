@@ -70,8 +70,8 @@ public class KingManager : MonoBehaviour
 	{
 		background.Hide();
 		Go.to(king.transform, 0.6f, new GoTweenConfig().position(startPosition).setEaseType(GoEaseType.BackInOut));
-		Go.to(bubble, 0.3f, new GoTweenConfig().colorProp("color", invisibleColor));
-		Go.to(bubbleText, 0.3f, new GoTweenConfig().colorProp("color", noTextColor));
+		Go.to(bubble, 0.25f, new GoTweenConfig().colorProp("color", invisibleColor));
+		Go.to(bubbleText, 0.25f, new GoTweenConfig().colorProp("color", noTextColor));
 	}
 
 	public void NextTalk()
@@ -100,13 +100,13 @@ public class KingManager : MonoBehaviour
 	{
 		if (closeBubble)
 		{
-			Go.to(bubble, 0.3f, new GoTweenConfig().colorProp("color", invisibleColor));
-			Go.to(bubbleText, 0.3f, new GoTweenConfig().colorProp("color", noTextColor));
+			Go.to(bubble, 0.25f, new GoTweenConfig().colorProp("color", invisibleColor));
+			Go.to(bubbleText, 0.25f, new GoTweenConfig().colorProp("color", noTextColor));
 		}
 		yield return new WaitForSeconds(talkDelay);
 		bubbleText.text = text;
-		Go.to(bubble, 0.3f, new GoTweenConfig().colorProp("color", Color.white));
-		Go.to(bubbleText, 0.3f, new GoTweenConfig().colorProp("color", textColor));
+		Go.to(bubble, 0.25f, new GoTweenConfig().colorProp("color", Color.white));
+		Go.to(bubbleText, 0.25f, new GoTweenConfig().colorProp("color", textColor));
 	}
 
 	public Problem GetRandomProblem()

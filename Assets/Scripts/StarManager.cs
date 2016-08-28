@@ -27,6 +27,7 @@ public class StarManager : MonoBehaviour
 
 	public int WinningIndex { get; private set; }
 
+	public string CurrentProblem { get; private set; }
 	public List<string> CurrentAnswers { get; private set; }
 
 	#endregion
@@ -151,7 +152,7 @@ public class StarManager : MonoBehaviour
 			"My previous prophet had an 'accident',\nso we need someone to fill in...",
 			"Your job is to answer to all of urgent and kingdom critical questions I have...",
 			"... by looking up answers in the sky.",
-			"Use scrolls to help you solve the answer,\ndrag to connect star!",
+			"Use scrolls to help you solve the answer.\n\nDrag to connect stars!",
 			//"Don't try to be lazy!\n\nI really dislike lazy people",
 			//"They tend to have 'accidents'..."
 		}, true);
@@ -166,6 +167,7 @@ public class StarManager : MonoBehaviour
 			GenerateStars();
 		}
 		var problem = KingManager.Instance.GetRandomProblem();
+		CurrentProblem = problem.Text;
 		KingManager.Instance.StartTalk(new List<string>() {
 			problem.Text
 		});

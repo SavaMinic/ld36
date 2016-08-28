@@ -15,6 +15,8 @@ public class OpenedScroll : MonoBehaviour
 	public float littleConnectionWidth;
 
 	public Text answerText;
+	public Color answerColor;
+	public Text questionText;
 
 	#endregion
 
@@ -69,6 +71,8 @@ public class OpenedScroll : MonoBehaviour
 	public void AnimateClose(Action callbackOnClosed = null)
 	{
 		Go.to(answerText, 0.3f, new GoTweenConfig().colorProp("color", noTextColor));
+		Go.to(questionText, 0.3f, new GoTweenConfig().colorProp("color", noTextColor));
+
 		var endScale = new Vector3(0f, defaultScale.y, defaultScale.z);
 		toggleAnimation = Go.to(transform, 0.5f,new GoTweenConfig()
 			.vector3Prop("localScale", endScale).setEaseType(GoEaseType.BackInOut)
@@ -115,7 +119,9 @@ public class OpenedScroll : MonoBehaviour
 
 		// show answer
 		answerText.text = StarManager.Instance.CurrentAnswers[index];
-		Go.to(answerText, 0.3f, new GoTweenConfig().colorProp("color", Color.white));
+		Go.to(answerText, 0.3f, new GoTweenConfig().colorProp("color", answerColor));
+		questionText.text = StarManager.Instance.CurrentProblem;
+		Go.to(questionText, 0.3f, new GoTweenConfig().colorProp("color", Color.white));
 		
 		// draw all stars in solution
 		var stars = new HashSet<Star>();
