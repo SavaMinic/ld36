@@ -21,14 +21,14 @@ public class SolutionManager : MonoBehaviour
 
 	public static SolutionManager Instance { get; private set; }
 
-	public List<Solution> RequiredSolutions { get; private set; }
+	public List<Solution> RequiredConnections { get; private set; }
 
 	#endregion
 
 	void Awake()
 	{
 		Instance = this;
-		RequiredSolutions = new List<Solution>();
+		RequiredConnections = new List<Solution>();
 	}
 
 	#region Public methods
@@ -37,7 +37,7 @@ public class SolutionManager : MonoBehaviour
 	{
 		Debug.Log("Generating solution! " + connectionsCount);
 
-		RequiredSolutions.Clear();
+		RequiredConnections.Clear();
 
 		var starWeights = new Dictionary<Star, int>();
 		StarManager.Instance.AllStars.ForEach(s => starWeights.Add(s, 3));
@@ -49,7 +49,7 @@ public class SolutionManager : MonoBehaviour
 			starWeights[star] -= 1;
 			if (from != null)
 			{
-				RequiredSolutions.Add(new Solution(from, star));
+				RequiredConnections.Add(new Solution(from, star));
 			}
 			from = star;
 		}
@@ -59,9 +59,9 @@ public class SolutionManager : MonoBehaviour
 	public void ShowSolution()
 	{
 		ConnectionManager.Instance.DeleteAllConnections();
-		for (int i = 0; i < RequiredSolutions.Count; i++)
+		for (int i = 0; i < RequiredConnections.Count; i++)
 		{
-			ConnectionManager.Instance.CreateConnection(RequiredSolutions[i].From, RequiredSolutions[i].To);
+			ConnectionManager.Instance.CreateConnection(RequiredConnections[i].From, RequiredConnections[i].To);
 		}
 	}
 

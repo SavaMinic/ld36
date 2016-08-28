@@ -23,7 +23,7 @@ public class ConnectionManager : MonoBehaviour
 	void Awake()
 	{
 		Instance = this;
-		connectionPrefab = Resources.Load("Prefabs/Connection") as GameObject;
+		connectionPrefab = Resources.Load<GameObject>("Prefabs/Connection");
 		Connections = new List<Connection>();
 	}
 
@@ -94,7 +94,6 @@ public class ConnectionManager : MonoBehaviour
 		var connection = Instantiate<GameObject>(connectionPrefab).GetComponent<Connection>();
 		connection.Initialize(from);
 		connection.Connect(to);
-		Debug.Log("CONNECTION " + from.ID + " " + to.ID);
 		Connections.Add(connection);
 	}
 

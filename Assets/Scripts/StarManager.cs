@@ -44,7 +44,7 @@ public class StarManager : MonoBehaviour
 	void Awake()
 	{
 		Instance = this;
-		starPrefab = Resources.Load("Prefabs/Star") as GameObject;
+		starPrefab = Resources.Load<GameObject>("Prefabs/Star");
 		AllStars = new List<Star>();
 		SelectedStars = new List<Star>();
 	}

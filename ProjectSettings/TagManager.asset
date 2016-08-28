@@ -53,3 +53,6 @@ TagManager:
   - name: OpenedScroll
     uniqueID: 3805182587
     locked: 0
+  - name: LittleStar
+    uniqueID: 3562391253
+    locked: 0
