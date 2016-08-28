@@ -40,7 +40,6 @@ public class SolutionManager : MonoBehaviour
 	{
 		int straightLimit = Random.Range(2,4);
 		int branchOut = Random.Range(0, 3) + 4 - straightLimit;
-		Debug.Log("Generating solution! " + straightLimit + " branch " + branchOut);
 		Solutions[index].Clear();
 
 		// try to make big line (up to limit)
@@ -52,7 +51,7 @@ public class SolutionManager : MonoBehaviour
 			if (star != null)
 			{
 				// TODO: check this interesctions check, seems that not working always
-				if (from != null && !IntersectsWithExisting(Solutions[index], from, star))
+				if (from != null && !IntersectsWithExisting(Solutions[index], from, star) && from != star)
 				{
 					Solutions[index].Add(new SolutionConnection(from, star));
 					freeStars.Remove(from);
@@ -78,8 +77,11 @@ public class SolutionManager : MonoBehaviour
 		var branch = solution.GetRandom();
 		var branchOutStar = Random.value > 0.5f ? branch.From : branch.To;
 		var freeStar = freeStars.GetRandom();
-		solution.Add(new SolutionConnection(branchOutStar, freeStar));
-		freeStars.Remove(freeStar);
+		if (branchOutStar != freeStar)
+		{
+			solution.Add(new SolutionConnection(branchOutStar, freeStar));
+			freeStars.Remove(freeStar);
+		}
 	}
 
 	private bool IntersectsWithExisting(List<SolutionConnection> solution, Star from, Star to)

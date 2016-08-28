@@ -149,10 +149,10 @@ public class StarManager : MonoBehaviour
 		KingManager.Instance.StartTalk(new List<string>() {
 			"Hey, you!\n\nYup, you there...",
 			"You look smart, with that pointy hat and those glasses.",
-			"My previous prophet had an 'accident',\nso we need someone to fill in...",
+			"My previous prophet had an <i>'accident'</i>,\nso we need someone to fill in...",
 			"Your job is to answer to all of urgent and kingdom critical questions I have...",
 			"... by looking up answers in the sky.",
-			"Use scrolls to help you solve the answer.\n\nDrag to connect stars!",
+			"Use scrolls to help you solve the answer.\n\n<b>Drag</b>  to connect stars!",
 			//"Don't try to be lazy!\n\nI really dislike lazy people",
 			//"They tend to have 'accidents'..."
 		}, true);
@@ -192,6 +192,7 @@ public class StarManager : MonoBehaviour
 	{
 		int starCount = 10;
 		WinningIndex = Random.Range(0, 2);
+		Debug.Log("Answer is " + WinningIndex);
 		GenerateStars(0, starCount);
 		SolutionManager.Instance.GenerateNewSolution(0);
 		GenerateStars(1, starCount);
@@ -262,7 +263,7 @@ public class StarManager : MonoBehaviour
 	{
 		State = GameState.Victory;
 		KingManager.Instance.StartTalk(new List<string>() {
-			"What? Really?\n\nInteresting answer.",
+			"What? Really?\n\n<b><i>" + CurrentAnswers[WinningIndex] + "?</i></b>\n\nInteresting!",
 			"I have something more to ask..."
 		}, true, true);
 	}
