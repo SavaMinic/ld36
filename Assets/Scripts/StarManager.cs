@@ -166,6 +166,9 @@ public class StarManager : MonoBehaviour
 		{
 			GenerateStars();
 		}
+		ConnectionManager.Instance.DeleteAllConnections();
+
+		// get the problem
 		var problem = KingManager.Instance.GetRandomProblem();
 		CurrentProblem = problem.Text;
 		KingManager.Instance.StartTalk(new List<string>() {
@@ -258,5 +261,9 @@ public class StarManager : MonoBehaviour
 	private void Victory()
 	{
 		State = GameState.Victory;
+		KingManager.Instance.StartTalk(new List<string>() {
+			"What? Really?\n\nInteresting answer.",
+			"I have something more to ask..."
+		}, true, true);
 	}
 }

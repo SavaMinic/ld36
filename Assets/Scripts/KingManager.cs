@@ -47,6 +47,9 @@ public class KingManager : MonoBehaviour
 	private Color invisibleColor = new Color(1f, 1f, 1f, 0f);
 
 	private bool isIntro;
+	private bool generateStars;
+
+	private List<Problem> availableProblems = new List<Problem>();
 
 	#endregion
 
@@ -56,10 +59,11 @@ public class KingManager : MonoBehaviour
 		startPosition = king.transform.position;
 	}
 
-	public void StartTalk(List<string> talks, bool isIntro = false)
+	public void StartTalk(List<string> talks, bool isIntro = false, bool generateStars = false)
 	{
 		this.talks = talks;
 		this.isIntro = isIntro;
+		this.generateStars = generateStars;
 		background.Show();
 		king.transform.position = startPosition;
 		Go.to(king.transform, 1.2f, new GoTweenConfig().position(talkPosition).setEaseType(GoEaseType.BackInOut));
@@ -81,7 +85,7 @@ public class KingManager : MonoBehaviour
 			EndTalk();
 			if (isIntro)
 			{
-				StarManager.Instance.NewRound(false);
+				StarManager.Instance.NewRound(generateStars);
 			}
 			else
 			{
@@ -111,7 +115,14 @@ public class KingManager : MonoBehaviour
 
 	public Problem GetRandomProblem()
 	{
-		return problems.GetRandom();
+		if (availableProblems.Count == 0)
+		{
+			availableProblems.AddRange(problems);
+		}
+		int i = Random.Range(0, availableProblems.Count);
+		var problem = availableProblems[i];
+		availableProblems.RemoveAt(i);
+		return problem;
 	}
 
 }
